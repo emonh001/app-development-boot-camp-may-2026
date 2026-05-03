@@ -1,5 +1,8 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../app/go_router/route_paths.dart';
 import '../controllers/signup_controller.dart';
 import '../widgets/signup/signup_card.dart';
 
@@ -44,6 +47,7 @@ class _SignupScreenState extends State<SignupScreen> {
             child: SignupCard(
               controller: controller,
               onSignupTap: _handleSignup,
+              onTap: () => context.go(RoutePaths.signin),
             ),
           ),
         ),

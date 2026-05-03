@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../app/theme/app_colors.dart';
@@ -13,11 +14,13 @@ import 'login_prompt.dart';
 class SignupCard extends StatelessWidget {
   final SignupController controller;
   final VoidCallback onSignupTap;
+  final VoidCallback onTap;
 
   const SignupCard({
     super.key,
     required this.controller,
     required this.onSignupTap,
+    required this.onTap
   });
 
   @override
@@ -129,7 +132,7 @@ class SignupCard extends StatelessWidget {
 
                 const SizedBox(height: 24),
 
-                const LoginPrompt(),
+                LoginPrompt(onTap: onTap,),
               ],
             ),
           );

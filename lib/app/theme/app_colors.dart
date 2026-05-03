@@ -27,6 +27,8 @@ class AppColors {
 
   static const Color border = Color(0xFF8F8F99);
   static const Color checkboxBorder = Color(0xFF9A9A9A);
+  static const Color fieldBackground = Color(0xFFFAFAFF);
+
 
   // Primary Colors
   static const Color primary = Color(0xFF1A146B);

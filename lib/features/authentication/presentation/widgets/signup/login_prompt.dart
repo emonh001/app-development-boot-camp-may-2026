@@ -4,25 +4,31 @@ import '../../../../../app/theme/app_colors.dart';
 import '../../../../../app/theme/app_typography.dart';
 
 class LoginPrompt extends StatelessWidget {
-  const LoginPrompt({super.key});
+  const LoginPrompt({
+    super.key,
+    required this.onTap,
+  });
+
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return RichText(
-      text: TextSpan(
-        style: TextStyle(color: AppColors.textGrey, fontSize: 12),
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          TextSpan(
-            text: 'Already have an account?  ',
+          Text(
+            'Already have an account?  ',
             style: AppTypography.textTheme.titleSmall!.copyWith(
               color: AppColors.onPrimaryBlack,
             ),
           ),
-          TextSpan(
-            text: 'Login',
+          Text(
+            'Sign In',
             style: AppTypography.textTheme.titleSmall!.copyWith(
               color: AppColors.primary,
-              fontWeight: .bold,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ],

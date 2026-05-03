@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:m_expense/app/go_router/route_paths.dart';
+import 'package:m_expense/features/authentication/presentation/screens/signin_screen.dart';
 import 'package:m_expense/features/authentication/presentation/screens/signup_screen.dart';
 import 'package:m_expense/features/authentication/presentation/screens/splash_screen.dart';
 
@@ -20,6 +21,13 @@ class AppRouter {
         name: RoutePaths.signup,
         pageBuilder: (context, state) =>
         const MaterialPage(child: SignupScreen()),
+      ),
+
+      GoRoute(
+        path: RoutePaths.signin,
+        name: RoutePaths.signin,
+        pageBuilder: (context, state) =>
+        const MaterialPage(child: SigninScreen()),
       ),
     ],
   );
