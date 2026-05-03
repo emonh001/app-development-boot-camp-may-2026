@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:m_expense/app/theme/app_typography.dart';
 
 class AppTitleWidget extends StatelessWidget {
   const AppTitleWidget({super.key});
@@ -8,14 +9,9 @@ class AppTitleWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Text(
+        Text(
           'MExpense',
-          style: TextStyle(
-            fontSize: 34,
-            fontWeight: FontWeight.w700,
-            color: Color(0xFF1A2C3E),
-            letterSpacing: -0.3,
-          ),
+          style: AppTypography.textTheme.headlineLarge,
         ),
         const SizedBox(height: 8),
         Text(
