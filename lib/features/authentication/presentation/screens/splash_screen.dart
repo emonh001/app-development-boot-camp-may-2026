@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
+import 'package:m_expense/app/go_router/route_paths.dart';
 
 import '../controllers/splash_controller.dart';
 import '../widgets/splash/app_logo_widget.dart';
@@ -28,6 +30,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
     _splashController = SplashController(vsync: this);
     _splashController.startAnimation();
+    _moveToNextScreen();
   }
 
   @override
@@ -72,4 +75,11 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
       ),
     );
   }
+
+  void _moveToNextScreen() async {
+    await Future.delayed(Duration(seconds: 3));
+    context.go(RoutePaths.signup);
+  }
+
+
 }

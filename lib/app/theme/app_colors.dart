@@ -20,6 +20,14 @@ class AppColors {
   static const Color outlineVariant = Color(0xFFC8C5D3);
   static const Color surfaceTint = Color(0xFF5654A8);
 
+  //SignUpColors
+  static const Color textDark = Color(0xFF15124A);
+  static const Color textGrey = Color(0xFF6F6F7A);
+  static const Color hintText = Color(0xFFC8C8D2);
+
+  static const Color border = Color(0xFF8F8F99);
+  static const Color checkboxBorder = Color(0xFF9A9A9A);
+
   // Primary Colors
   static const Color primary = Color(0xFF1A146B);
   static const Color onPrimary = Color(0xFFFFFFFF);
@@ -30,6 +38,7 @@ class AppColors {
   static const Color primaryFixedDim = Color(0xFFC3C0FF);
   static const Color onPrimaryFixed = Color(0xFF100563);
   static const Color onPrimaryFixedVariant = Color(0xFF3E3C8F);
+  static const Color onPrimaryBlack = Color(0xFF000000);
 
   // Secondary Colors
   static const Color secondary = Color(0xFF4648D4);

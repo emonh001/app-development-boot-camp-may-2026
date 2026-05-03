@@ -18,6 +18,7 @@ class AppTypography {
     ),
     headlineMedium: GoogleFonts.inter(
       fontSize: 24,
+      color: Color(0xFF312E81),
       fontWeight: FontWeight.w600,
       height: 32 / 24,
       letterSpacing: -0.01 * 24,
