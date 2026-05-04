@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:m_expense/features/home/presentation/screens/home_screen.dart';
 
 import '../../../profile/presentation/screens/profile_screen.dart';
 import '../controllers/bottom_nav_bar_controller.dart';
@@ -31,6 +32,10 @@ class _BottomNavBarHolderScreenState extends State<BottomNavBarHolderScreen> {
     controller.changeSelectedIndex(index);
   }
 
+  void _goToAddScreen() {
+    controller.changeSelectedIndex(1);
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
@@ -39,8 +44,8 @@ class _BottomNavBarHolderScreenState extends State<BottomNavBarHolderScreen> {
         return Scaffold(
           body: IndexedStack(
             index: controller.selectedIndex,
-            children: const [
-              _HomeScreenPlaceholder(),
+            children: [
+              HomeScreen(onAddTap: _goToAddScreen),
               _AddExpenseScreenPlaceholder(),
               _HistoryScreenPlaceholder(),
               ProfileScreen(),
@@ -56,16 +61,6 @@ class _BottomNavBarHolderScreenState extends State<BottomNavBarHolderScreen> {
   }
 }
 
-class _HomeScreenPlaceholder extends StatelessWidget {
-  const _HomeScreenPlaceholder();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Home Screen'),
-    );
-  }
-}
 
 class _AddExpenseScreenPlaceholder extends StatelessWidget {
   const _AddExpenseScreenPlaceholder();
