@@ -35,6 +35,7 @@ class _SigninScreenState extends State<SigninScreen> {
   void _signin() {
     final message = controller.signin();
     ShowSnackbar.showMessage(context, message);
+    context.go(RoutePaths.bottomNavBarHolder);
   }
 
   @override
@@ -54,7 +55,7 @@ class _SigninScreenState extends State<SigninScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: SigninCard(
                       controller: controller,
-                      onSigninTap: (){},
+                      onSigninTap: _signin,
                       onCreateAccountTap: () => context.go(RoutePaths.signup),
                     ),
                   ),
@@ -67,10 +68,3 @@ class _SigninScreenState extends State<SigninScreen> {
     );
   }
 }
-
-/*
-SigninForm(
-                      controller: controller,
-                      onSigninTap: _signin,
-                    )
-*/

@@ -58,9 +58,7 @@ class SigninForm extends StatelessWidget {
 
               const SizedBox(height: 26),
 
-              SigninButton(onTap: (){
-                controller.signin();
-              }),
+              SigninButton(onTap: onSigninTap),
 
               const SizedBox(height: 18),
 

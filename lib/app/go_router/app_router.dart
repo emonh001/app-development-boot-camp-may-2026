@@ -8,6 +8,8 @@ import 'package:m_expense/features/authentication/presentation/screens/signup_sc
 import 'package:m_expense/features/authentication/presentation/screens/splash_screen.dart';
 import 'package:m_expense/features/authentication/presentation/screens/verify_otp_screen.dart';
 
+import '../../features/bottom_nav_bar/presentation/screens/bottom_nav_bar_holder_screen.dart';
+
 class AppRouter {
   static final GoRouter router = GoRouter(
     initialLocation: RoutePaths.splash,
@@ -52,6 +54,12 @@ class AppRouter {
         name: RoutePaths.resetPassword,
         pageBuilder: (context, state) =>
         const MaterialPage(child: ResetPasswordScreen()),
+      ),
+
+      GoRoute(
+        path: RoutePaths.bottomNavBarHolder,
+        name: RoutePaths.bottomNavBarHolder,
+        builder: (context, state) => const BottomNavBarHolderScreen(),
       ),
 
     ],
