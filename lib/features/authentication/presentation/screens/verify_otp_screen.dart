@@ -35,6 +35,9 @@ class _VerifyOtpScreenState extends State<VerifyOtpScreen> {
   void _verifyOtp() {
     final message = controller.verifyOtp();
     ShowSnackbar.showMessage(context, message);
+    if (message == 'OTP verified successfully') {
+      context.go(RoutePaths.resetPassword);
+    }
   }
 
   void _resendCode() {

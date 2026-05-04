@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:m_expense/app/go_router/route_paths.dart';
 import 'package:m_expense/features/authentication/presentation/screens/forgot_password_screen.dart';
+import 'package:m_expense/features/authentication/presentation/screens/reset_password_screen.dart';
 import 'package:m_expense/features/authentication/presentation/screens/signin_screen.dart';
 import 'package:m_expense/features/authentication/presentation/screens/signup_screen.dart';
 import 'package:m_expense/features/authentication/presentation/screens/splash_screen.dart';
@@ -44,6 +45,13 @@ class AppRouter {
         name: RoutePaths.verifyOtp,
         pageBuilder: (context, state) =>
         const MaterialPage(child: VerifyOtpScreen()),
+      ),
+
+      GoRoute(
+        path: RoutePaths.resetPassword,
+        name: RoutePaths.resetPassword,
+        pageBuilder: (context, state) =>
+        const MaterialPage(child: ResetPasswordScreen()),
       ),
 
     ],
