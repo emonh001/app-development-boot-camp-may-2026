@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../../app/go_router/route_paths.dart';
 import '../../controllers/signin_controller.dart';
 import 'signin_title.dart';
 import 'signin_text_field.dart';
@@ -56,11 +58,15 @@ class SigninForm extends StatelessWidget {
 
               const SizedBox(height: 26),
 
-              SigninButton(onTap: onSigninTap),
+              SigninButton(onTap: (){
+                controller.signin();
+              }),
 
               const SizedBox(height: 18),
 
-              const ForgotPassword(),
+              ForgotPassword(onTap: (){
+                context.go(RoutePaths.forgotPassword);
+              },),
 
               const SizedBox(height: 34),
 

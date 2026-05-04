@@ -4,14 +4,13 @@ import '../../../../../app/theme/app_colors.dart';
 
 
 class ForgotPassword extends StatelessWidget {
-  const ForgotPassword({super.key});
+  const ForgotPassword({super.key, required this.onTap});
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        // Navigate to forgot password screen later
-      },
+      onTap: onTap,
       child: const Text(
         'Forgot Password?',
         style: TextStyle(
