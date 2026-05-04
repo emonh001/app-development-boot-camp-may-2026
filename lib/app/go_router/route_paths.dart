@@ -5,5 +5,6 @@ class RoutePaths {
   static const String signup = "/signup";
   static const String signin = "/signin";
   static const String forgotPassword = '/forgot-password';
+  static const String verifyOtp = '/verify-otp';
 
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:m_expense/features/common/presentation/widgets/show_snackbar.dart';
 
 import '../../../../app/go_router/route_paths.dart';
 import '../controllers/signup_controller.dart';
@@ -31,10 +32,7 @@ class _SignupScreenState extends State<SignupScreen> {
 
   void _handleSignup() {
     final message = controller.signup();
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ShowSnackbar.showMessage(context, message);
   }
 
   @override

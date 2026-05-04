@@ -5,6 +5,7 @@ import 'package:m_expense/features/authentication/presentation/screens/forgot_pa
 import 'package:m_expense/features/authentication/presentation/screens/signin_screen.dart';
 import 'package:m_expense/features/authentication/presentation/screens/signup_screen.dart';
 import 'package:m_expense/features/authentication/presentation/screens/splash_screen.dart';
+import 'package:m_expense/features/authentication/presentation/screens/verify_otp_screen.dart';
 
 class AppRouter {
   static final GoRouter router = GoRouter(
@@ -36,6 +37,13 @@ class AppRouter {
         name: RoutePaths.forgotPassword,
         pageBuilder: (context, state) =>
         const MaterialPage(child: ForgotPasswordScreen()),
+      ),
+
+      GoRoute(
+        path: RoutePaths.verifyOtp,
+        name: RoutePaths.verifyOtp,
+        pageBuilder: (context, state) =>
+        const MaterialPage(child: VerifyOtpScreen()),
       ),
 
     ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:m_expense/app/theme/app_colors.dart';
+import 'package:m_expense/features/common/presentation/widgets/show_snackbar.dart';
 
 import '../../../../app/go_router/route_paths.dart';
 import '../controllers/signin_controller.dart';
@@ -33,10 +34,7 @@ class _SigninScreenState extends State<SigninScreen> {
 
   void _signin() {
     final message = controller.signin();
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ShowSnackbar.showMessage(context, message);
   }
 
   @override

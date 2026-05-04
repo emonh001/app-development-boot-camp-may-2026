@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:m_expense/features/common/presentation/widgets/show_snackbar.dart';
 
 import '../../../../app/go_router/route_paths.dart';
 import '../../../../app/theme/app_colors.dart';
@@ -30,10 +31,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   void _sendVerificationEmail() {
     final message = controller.sendVerificationEmail();
+    ShowSnackbar.showMessage(context, message);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    if (message == '6 Digit OTP sent to your Email') {
+      context.go(RoutePaths.verifyOtp);
+    }
   }
 
   void _goBackToSignin() {

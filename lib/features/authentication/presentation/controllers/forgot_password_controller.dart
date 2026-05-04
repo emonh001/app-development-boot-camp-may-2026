@@ -26,7 +26,7 @@ class ForgotPasswordController extends ChangeNotifier {
       return 'Please enter a valid email address';
     }
 
-    return 'Verification email sent';
+    return '6 Digit OTP sent to your Email';
   }
 
   void disposeController() {

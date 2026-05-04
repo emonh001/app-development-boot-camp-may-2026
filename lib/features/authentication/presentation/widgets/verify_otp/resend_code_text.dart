@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../../../app/theme/app_colors.dart';
 import '../../../../../app/theme/app_typography.dart';
 
-class BackToSigninText extends StatelessWidget {
-  const BackToSigninText({
+class ResendCodeText extends StatelessWidget {
+  const ResendCodeText({
     super.key,
     required this.onTap,
   });
@@ -13,29 +13,29 @@ class BackToSigninText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.arrow_back,
-            size: 15,
-            color: AppColors.primary,
+    return Column(
+      children: [
+        Text(
+          "Didn't receive the code?",
+          style: AppTypography.textTheme.bodyMedium!.copyWith(
+            color: AppColors.textGrey,
           ),
+        ),
 
-          const SizedBox(width: 4),
+        const SizedBox(height: 8),
 
-          Text(
-            'Back to Signin',
+        GestureDetector(
+          onTap: onTap,
+          behavior: HitTestBehavior.opaque,
+          child: Text(
+            'Resend Code',
             style: AppTypography.textTheme.titleSmall!.copyWith(
               color: AppColors.primary,
               fontWeight: FontWeight.bold,
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
