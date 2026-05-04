@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:m_expense/features/history/presentation/screens/history_screen.dart';
 import 'package:m_expense/features/home/presentation/screens/home_screen.dart';
 
 import '../../../expenses/presentation/screens/add_expense_screen.dart';
@@ -54,8 +55,8 @@ class _BottomNavBarHolderScreenState extends State<BottomNavBarHolderScreen> {
               AddExpenseScreen(
                 onBackTap: _goToHomeScreen,
               ),
-              _HistoryScreenPlaceholder(),
-              ProfileScreen(),
+              const HistoryScreen(),
+              const ProfileScreen(),
             ],
           ),
           bottomNavigationBar: AppBottomNavBar(
@@ -69,24 +70,4 @@ class _BottomNavBarHolderScreenState extends State<BottomNavBarHolderScreen> {
 }
 
 
-class _AddExpenseScreenPlaceholder extends StatelessWidget {
-  const _AddExpenseScreenPlaceholder();
 
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Add Expense Screen'),
-    );
-  }
-}
-
-class _HistoryScreenPlaceholder extends StatelessWidget {
-  const _HistoryScreenPlaceholder();
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text('History Screen'),
-    );
-  }
-}
