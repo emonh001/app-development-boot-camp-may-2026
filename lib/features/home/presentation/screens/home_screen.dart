@@ -123,6 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     return TransactionTile(
                                       expense:
                                       controller.recentExpenses[index],
+                                      currencySymbol: controller.currencySymbol,
                                     );
                                   },
                                 ),

@@ -1,4 +1,4 @@
-import '../models/expense_model.dart';
+import 'expense_model.dart';
 
 class HistoryGroupModel {
   const HistoryGroupModel({
@@ -8,6 +8,6 @@ class HistoryGroupModel {
   });
 
   final String title;
-  final String totalAmount;
+  final double totalAmount;
   final List<ExpenseModel> expenses;
 }

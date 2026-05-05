@@ -8,9 +8,11 @@ class HistoryTransactionTile extends StatelessWidget {
   const HistoryTransactionTile({
     super.key,
     required this.expense,
+    required this.currencySymbol,
   });
 
   final ExpenseModel expense;
+  final String currencySymbol;
 
   @override
   Widget build(BuildContext context) {
@@ -81,7 +83,7 @@ class HistoryTransactionTile extends StatelessWidget {
           const SizedBox(width: 12),
 
           Text(
-            '-\$${expense.amount.toStringAsFixed(2)}',
+            '-$currencySymbol${expense.amount.toStringAsFixed(2)}',
             style: AppTypography.textTheme.titleMedium!.copyWith(
               color: Colors.red,
               fontWeight: FontWeight.bold,

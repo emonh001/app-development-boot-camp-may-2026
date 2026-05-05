@@ -102,7 +102,7 @@ class ExpenseRepository {
     return db.delete(DbCredentials.expensesTable, where: "id = ?", whereArgs: [id]);
   }
 
-  Future<int> deleteAllExpense() async {
+  Future<int> deleteAllExpenses() async {
     final db = await _databaseService.database;
 
     return db.delete(DbCredentials.expensesTable);

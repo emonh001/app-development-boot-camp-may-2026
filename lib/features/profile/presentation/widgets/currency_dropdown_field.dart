@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_typography.dart';
+import '../data/models/currency_option_model.dart';
 
 class CurrencyDropdownField extends StatelessWidget {
   const CurrencyDropdownField({
@@ -12,7 +13,7 @@ class CurrencyDropdownField extends StatelessWidget {
   });
 
   final String value;
-  final List<String> items;
+  final List<CurrencyOptionModel> items;
   final ValueChanged<String?> onChanged;
 
   @override
@@ -62,8 +63,8 @@ class CurrencyDropdownField extends StatelessWidget {
           ),
           items: items.map((currency) {
             return DropdownMenuItem<String>(
-              value: currency,
-              child: Text(currency),
+              value: currency.code,
+              child: Text(currency.label),
             );
           }).toList(),
         ),

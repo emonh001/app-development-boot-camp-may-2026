@@ -8,9 +8,13 @@ class MonthlyBudgetField extends StatelessWidget {
   const MonthlyBudgetField({
     super.key,
     required this.controller,
+    required this.onChanged,
+    required this.errorText,
   });
 
   final TextEditingController controller;
+  final ValueChanged<String> onChanged;
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) {
@@ -26,15 +30,21 @@ class MonthlyBudgetField extends StatelessWidget {
 
         TextFormField(
           controller: controller,
-          keyboardType: TextInputType.number,
+          onChanged: onChanged,
+          keyboardType: const TextInputType.numberWithOptions(
+            decimal: true,
+          ),
           cursorColor: AppColors.primary,
           inputFormatters: [
-            FilteringTextInputFormatter.digitsOnly,
+            FilteringTextInputFormatter.allow(
+              RegExp(r'^\d*\.?\d{0,2}'),
+            ),
           ],
           style: AppTypography.textTheme.bodyMedium!.copyWith(
             color: AppColors.onPrimaryBlack,
           ),
           decoration: InputDecoration(
+            errorText: errorText,
             prefixText: '\$  ',
             prefixStyle: AppTypography.textTheme.bodyMedium!.copyWith(
               color: AppColors.textGrey,
@@ -57,6 +67,20 @@ class MonthlyBudgetField extends StatelessWidget {
               borderRadius: BorderRadius.circular(7),
               borderSide: BorderSide(
                 color: AppColors.primary,
+                width: 1.2,
+              ),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(7),
+              borderSide: const BorderSide(
+                color: Colors.red,
+                width: 1,
+              ),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(7),
+              borderSide: const BorderSide(
+                color: Colors.red,
                 width: 1.2,
               ),
             ),

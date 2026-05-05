@@ -2,23 +2,29 @@ import 'package:flutter/material.dart';
 
 import '../../../expenses/presentation/data/models/expense_model.dart';
 import '../../../expenses/presentation/data/repositories/expense_repository.dart';
+import '../../../profile/presentation/data/repositories/profile_repository.dart';
 
 
 
 class HomeController extends ChangeNotifier {
   HomeController({
     ExpenseRepository? expenseRepository,
-  }) : _expenseRepository = expenseRepository ?? ExpenseRepository();
+    ProfileRepository? profileRepository,
+  })  : _expenseRepository = expenseRepository ?? ExpenseRepository(),
+        _profileRepository = profileRepository ?? ProfileRepository();
 
   final ExpenseRepository _expenseRepository;
+  final ProfileRepository _profileRepository;
 
   bool isLoading = false;
   String? errorMessage;
 
   List<ExpenseModel> recentExpenses = [];
 
-  double monthlyBudget = 2500;
+  double monthlyBudget = 0;
   double totalExpense = 0;
+
+  String currencySymbol = r'$';
 
   String get monthName {
     final now = DateTime.now();
@@ -65,7 +71,13 @@ class HomeController extends ChangeNotifier {
       errorMessage = null;
       notifyListeners();
 
+      final profile = await _profileRepository.getProfile();
+
+      monthlyBudget = profile.monthlyBudget;
+      currencySymbol = profile.currencySymbol;
+
       recentExpenses = await _expenseRepository.getRecentExpenses(limit: 4);
+
       totalExpense = await _expenseRepository.getTotalExpenseForMonth(
         DateTime.now(),
       );
@@ -82,6 +94,13 @@ class HomeController extends ChangeNotifier {
   }
 
   String _formatCurrency(double value) {
-    return '\$${value.toStringAsFixed(2)}';
+    final isNegative = value < 0;
+    final positiveValue = value.abs().toStringAsFixed(2);
+
+    if (isNegative) {
+      return '-$currencySymbol$positiveValue';
+    }
+
+    return '$currencySymbol$positiveValue';
   }
 }

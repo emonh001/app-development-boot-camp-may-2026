@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_typography.dart';
-import '../../../expenses/presentation/data/repositories/history_group_model.dart';
+import '../../../expenses/presentation/data/models/history_group_model.dart';
 import 'history_transaction_tile.dart';
 
 class HistorySection extends StatelessWidget {
   const HistorySection({
     super.key,
     required this.group,
+    required this.currencySymbol,
   });
 
   final HistoryGroupModel group;
+  final String currencySymbol;
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class HistorySection extends StatelessWidget {
             const Spacer(),
 
             Text(
-              group.totalAmount,
+              '-$currencySymbol${group.totalAmount.toStringAsFixed(2)}',
               style: AppTypography.textTheme.titleSmall!.copyWith(
                 color: AppColors.textGrey,
                 fontWeight: FontWeight.bold,
@@ -51,6 +53,7 @@ class HistorySection extends StatelessWidget {
           itemBuilder: (context, index) {
             return HistoryTransactionTile(
               expense: group.expenses[index],
+              currencySymbol: currencySymbol,
             );
           },
         ),

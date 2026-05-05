@@ -104,6 +104,7 @@ class _HistoryScreenState extends State<HistoryScreen> {
                               itemBuilder: (context, index) {
                                 return HistorySection(
                                   group: controller.historyGroups[index],
+                                  currencySymbol: controller.currencySymbol,
                                 );
                               },
                             ),

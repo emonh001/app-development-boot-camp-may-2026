@@ -1,20 +1,28 @@
 import 'package:flutter/material.dart';
+
 import '../../../expenses/presentation/data/models/expense_model.dart';
+import '../../../expenses/presentation/data/models/history_group_model.dart';
 import '../../../expenses/presentation/data/repositories/expense_repository.dart';
-import '../../../expenses/presentation/data/repositories/history_group_model.dart';
+import '../../../profile/presentation/data/repositories/profile_repository.dart';
+
 
 
 class HistoryController extends ChangeNotifier {
   HistoryController({
     ExpenseRepository? expenseRepository,
-  }) : _expenseRepository = expenseRepository ?? ExpenseRepository();
+    ProfileRepository? profileRepository,
+  })  : _expenseRepository = expenseRepository ?? ExpenseRepository(),
+        _profileRepository = profileRepository ?? ProfileRepository();
 
   final ExpenseRepository _expenseRepository;
+  final ProfileRepository _profileRepository;
 
   final searchController = TextEditingController();
 
   bool isLoading = false;
   String? errorMessage;
+
+  String currencySymbol = r'$';
 
   List<HistoryGroupModel> historyGroups = [];
 
@@ -23,6 +31,9 @@ class HistoryController extends ChangeNotifier {
       isLoading = true;
       errorMessage = null;
       notifyListeners();
+
+      final profile = await _profileRepository.getProfile();
+      currencySymbol = profile.currencySymbol;
 
       final expenses = await _expenseRepository.getExpensesForHistory(
         searchText: searchText,
@@ -64,10 +75,20 @@ class HistoryController extends ChangeNotifier {
 
       return HistoryGroupModel(
         title: _getGroupTitle(date),
-        totalAmount: _getTotalAmountText(expenses),
+        totalAmount: _getTotalAmount(expenses),
         expenses: expenses,
       );
     }).toList();
+  }
+
+  double _getTotalAmount(List<ExpenseModel> expenses) {
+    double total = 0;
+
+    for (final expense in expenses) {
+      total = total + expense.amount;
+    }
+
+    return total;
   }
 
   String _getDateKey(DateTime date) {
@@ -125,16 +146,6 @@ class HistoryController extends ChangeNotifier {
     final month = months[date.month - 1];
 
     return '$month ${date.day}';
-  }
-
-  String _getTotalAmountText(List<ExpenseModel> expenses) {
-    double total = 0;
-
-    for (final expense in expenses) {
-      total = total + expense.amount;
-    }
-
-    return '-\$${total.toStringAsFixed(2)}';
   }
 
   void disposeController() {

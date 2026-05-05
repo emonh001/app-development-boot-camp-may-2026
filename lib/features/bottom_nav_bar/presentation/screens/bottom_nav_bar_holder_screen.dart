@@ -60,13 +60,9 @@ class _BottomNavBarHolderScreenState extends State<BottomNavBarHolderScreen> {
                 onAddTap: _goToAddScreen,
                 refreshKey: controller.homeRefreshKey,
               ),
-              AddExpenseScreen(
-                onBackTap: _goToHomeScreen,
-              ),
-              HistoryScreen(
-                refreshKey: controller.historyRefreshKey,
-              ),
-              const ProfileScreen(),
+              AddExpenseScreen(onBackTap: _goToHomeScreen),
+              HistoryScreen(refreshKey: controller.historyRefreshKey),
+              ProfileScreen(onDataChanged: controller.refreshHomeAndHistory),
             ],
           ),
           bottomNavigationBar: AppBottomNavBar(

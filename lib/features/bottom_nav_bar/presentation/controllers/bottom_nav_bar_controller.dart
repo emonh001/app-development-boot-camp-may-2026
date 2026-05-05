@@ -29,6 +29,13 @@ class BottomNavBarController extends ChangeNotifier {
     notifyListeners();
   }
 
+  void refreshHomeAndHistory() {
+    homeRefreshKey++;
+    historyRefreshKey++;
+
+    notifyListeners();
+  }
+
   void _refreshCurrentTab(int index) {
     if (index == 0) {
       homeRefreshKey++;

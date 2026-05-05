@@ -10,9 +10,11 @@ class AccountSettingsSection extends StatelessWidget {
   const AccountSettingsSection({
     super.key,
     required this.controller,
+    required this.onProfileChanged
   });
 
   final ProfileController controller;
+  final VoidCallback? onProfileChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -47,17 +49,27 @@ class AccountSettingsSection extends StatelessWidget {
           child: AnimatedBuilder(
             animation: controller,
             builder: (context, _) {
+              if (controller.isLoading) {
+                return Center(
+                  child: CircularProgressIndicator(
+                    color: AppColors.primary,
+                  ),
+                );
+              }
+
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   MonthlyBudgetField(
                     controller: controller.monthlyBudgetController,
+                    onChanged: controller.changeMonthlyBudget,
+                    errorText: controller.budgetErrorText,
                   ),
 
                   const SizedBox(height: 22),
 
                   CurrencyDropdownField(
-                    value: controller.selectedCurrency,
+                    value: controller.selectedCurrencyCode,
                     items: controller.currencies,
                     onChanged: controller.changeCurrency,
                   ),

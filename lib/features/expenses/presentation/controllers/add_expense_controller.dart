@@ -15,7 +15,7 @@ class AddExpenseController extends ChangeNotifier {
   final noteController = TextEditingController();
   bool isSaving = false;
 
-  DateTime selectedDate = DateTime(2023, 11, 20);
+  DateTime selectedDate = DateTime.now();
   final List<ExpenseCategoryModel> categories = const [
     ExpenseCategoryModel(
       id: 'food',
@@ -100,21 +100,31 @@ class AddExpenseController extends ChangeNotifier {
         amount: double.parse(amountController.text.trim()),
         category: selectedCategoryId,
         note: noteController.text.trim(),
-        date: DateTime.now().toIso8601String(),
+        date: selectedDate.toIso8601String(),
         createdAt: DateTime.now().toIso8601String(),
       );
-      await _expenseRepository.insertExpense(expense);
+
+      final insertedId = await _expenseRepository.insertExpense(expense);
+
+      debugPrint('Inserted expense id: $insertedId');
+
+      final allExpenses = await _expenseRepository.getAllExpenses();
+
+      debugPrint('Total expenses in database: ${allExpenses.length}');
+
       _clearForm();
 
       return 'Expense saved successfully';
     } catch (error) {
+      debugPrint('Save expense error: $error');
       return 'Failed to save expense';
     } finally {
       isSaving = false;
       notifyListeners();
     }
-
   }
+
+
   void _clearForm() {
     amountController.clear();
     noteController.clear();
