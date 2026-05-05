@@ -33,13 +33,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.dispose();
   }
 
-  void _logout() {
-    final message = controller.logout();
-    ShowSnackbar.showMessage(context, message);
-
-
-    context.go(RoutePaths.signin);
-  }
 
   void _clearAllData() {
     final message = controller.clearAllData();
@@ -75,17 +68,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     const SizedBox(height: 18),
 
-                    ProfileActionTile(
-                      icon: Icons.logout,
-                      title: 'Logout',
-                      iconBackgroundColor: AppColors.primary.withValues(alpha: 0.12),
-                      iconColor: AppColors.primary,
-                      titleColor: AppColors.onPrimaryBlack,
-                      trailingIcon: Icons.chevron_right,
-                      onTap: _logout,
-                    ),
-
-                    const SizedBox(height: 14),
 
                     ProfileActionTile(
                       icon: Icons.delete_outline,

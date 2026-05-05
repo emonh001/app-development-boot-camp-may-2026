@@ -78,7 +78,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
   void _moveToNextScreen() async {
     await Future.delayed(Duration(seconds: 3));
-    context.go(RoutePaths.signup);
+    context.go(RoutePaths.bottomNavBarHolder);
   }
 
 
