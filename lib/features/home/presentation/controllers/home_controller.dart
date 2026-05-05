@@ -1,39 +1,87 @@
-import '../models/transaction_item_model.dart';
+import 'package:flutter/material.dart';
 
-class HomeController {
-  final String monthName = 'September';
-  final String totalExpense = '\$4,285.50';
-  final String remainingBudget = '\$1,714.50';
-  final String percentageText = '12% from last month';
+import '../../../expenses/presentation/data/models/expense_model.dart';
+import '../../../expenses/presentation/data/repositories/expense_repository.dart';
 
-  final List<TransactionItemModel> transactions = const [
-    TransactionItemModel(
-      title: 'Groceries & Home',
-      date: 'Sep 12, 2023',
-      amount: '-\$84.20',
-      icon: 'shopping_bag',
-      type: TransactionType.expense,
-    ),
-    TransactionItemModel(
-      title: 'Artisanal Bakery',
-      date: 'Sep 11, 2023',
-      amount: '-\$12.50',
-      icon: 'restaurant',
-      type: TransactionType.expense,
-    ),
-    TransactionItemModel(
-      title: 'Fuel Refill',
-      date: 'Sep 10, 2023',
-      amount: '-\$56.00',
-      icon: 'car',
-      type: TransactionType.expense,
-    ),
-    TransactionItemModel(
-      title: 'Freelance Payout',
-      date: 'Sep 09, 2023',
-      amount: '+\$1,200.00',
-      icon: 'money',
-      type: TransactionType.income,
-    ),
-  ];
+
+
+class HomeController extends ChangeNotifier {
+  HomeController({
+    ExpenseRepository? expenseRepository,
+  }) : _expenseRepository = expenseRepository ?? ExpenseRepository();
+
+  final ExpenseRepository _expenseRepository;
+
+  bool isLoading = false;
+  String? errorMessage;
+
+  List<ExpenseModel> recentExpenses = [];
+
+  double monthlyBudget = 2500;
+  double totalExpense = 0;
+
+  String get monthName {
+    final now = DateTime.now();
+
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+
+    return months[now.month - 1];
+  }
+
+  String get totalExpenseText {
+    return _formatCurrency(totalExpense);
+  }
+
+  String get remainingBudgetText {
+    final remaining = monthlyBudget - totalExpense;
+    return _formatCurrency(remaining);
+  }
+
+  String get percentageText {
+    if (monthlyBudget <= 0) {
+      return '0% of budget used';
+    }
+
+    final percentage = (totalExpense / monthlyBudget) * 100;
+    return '${percentage.toStringAsFixed(0)}% of budget used';
+  }
+
+  Future<void> loadHomeData() async {
+    try {
+      isLoading = true;
+      errorMessage = null;
+      notifyListeners();
+
+      recentExpenses = await _expenseRepository.getRecentExpenses(limit: 4);
+      totalExpense = await _expenseRepository.getTotalExpenseForMonth(
+        DateTime.now(),
+      );
+    } catch (error) {
+      errorMessage = 'Failed to load home data';
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> refreshHomeData() async {
+    await loadHomeData();
+  }
+
+  String _formatCurrency(double value) {
+    return '\$${value.toStringAsFixed(2)}';
+  }
 }

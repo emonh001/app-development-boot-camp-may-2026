@@ -51,7 +51,10 @@ class _BottomNavBarHolderScreenState extends State<BottomNavBarHolderScreen> {
           body: IndexedStack(
             index: controller.selectedIndex,
             children: [
-              HomeScreen(onAddTap: _goToAddScreen),
+              HomeScreen(
+                onAddTap: _goToAddScreen,
+                refreshKey: controller.homeRefreshKey,
+              ),
               AddExpenseScreen(
                 onBackTap: _goToHomeScreen,
               ),

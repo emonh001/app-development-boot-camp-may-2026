@@ -119,6 +119,7 @@ class AddExpenseController extends ChangeNotifier {
     amountController.clear();
     noteController.clear();
     selectedCategoryId = 'food';
+    amountController.text = "0.00";
     selectedDate = DateTime.now();
   }
 

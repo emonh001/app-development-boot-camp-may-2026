@@ -2,25 +2,18 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_typography.dart';
-import '../models/transaction_item_model.dart';
+import '../../../expenses/presentation/data/models/expense_model.dart';
 
 class TransactionTile extends StatelessWidget {
   const TransactionTile({
     super.key,
-    required this.transaction,
+    required this.expense,
   });
 
-  final TransactionItemModel transaction;
-
-  bool get isIncome => transaction.type == TransactionType.income;
+  final ExpenseModel expense;
 
   @override
   Widget build(BuildContext context) {
-    final amountColor = isIncome ? const Color(0xFF00B87C) : Colors.red;
-    final iconBackgroundColor = isIncome
-        ? const Color(0xFF48E0A4)
-        : AppColors.primary.withValues(alpha: 0.10);
-
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(
@@ -44,12 +37,12 @@ class TransactionTile extends StatelessWidget {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: iconBackgroundColor,
+              color: AppColors.primary.withValues(alpha: 0.10),
               shape: BoxShape.circle,
             ),
             child: Icon(
-              _getIcon(transaction.icon),
-              color: isIncome ? AppColors.surfaceContainerLowest : AppColors.primary,
+              _getCategoryIcon(expense.category),
+              color: AppColors.primary,
               size: 22,
             ),
           ),
@@ -61,7 +54,7 @@ class TransactionTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  transaction.title,
+                  _getTitle(),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTypography.textTheme.titleSmall!.copyWith(
@@ -73,7 +66,7 @@ class TransactionTile extends StatelessWidget {
                 const SizedBox(height: 4),
 
                 Text(
-                  transaction.date,
+                  _formatDate(expense.date),
                   style: AppTypography.textTheme.bodySmall!.copyWith(
                     color: AppColors.textGrey,
                   ),
@@ -85,9 +78,9 @@ class TransactionTile extends StatelessWidget {
           const SizedBox(width: 12),
 
           Text(
-            transaction.amount,
+            '-\$${expense.amount.toStringAsFixed(2)}',
             style: AppTypography.textTheme.titleMedium!.copyWith(
-              color: amountColor,
+              color: Colors.red,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -96,18 +89,74 @@ class TransactionTile extends StatelessWidget {
     );
   }
 
-  IconData _getIcon(String iconName) {
-    switch (iconName) {
-      case 'shopping_bag':
-        return Icons.shopping_bag_outlined;
-      case 'restaurant':
+  String _getTitle() {
+    if (expense.note.trim().isNotEmpty) {
+      return expense.note;
+    }
+
+    return _formatCategoryName(expense.category);
+  }
+
+  String _formatCategoryName(String category) {
+    switch (category) {
+      case 'food':
+        return 'Food';
+      case 'transport':
+        return 'Transport';
+      case 'shopping':
+        return 'Shopping';
+      case 'health':
+        return 'Health';
+      case 'entertainment':
+        return 'Entertainment';
+      case 'others':
+        return 'Others';
+      default:
+        return category;
+    }
+  }
+
+  IconData _getCategoryIcon(String category) {
+    switch (category) {
+      case 'food':
         return Icons.restaurant_outlined;
-      case 'car':
+      case 'transport':
         return Icons.directions_car_outlined;
-      case 'money':
-        return Icons.payments_outlined;
+      case 'shopping':
+        return Icons.shopping_bag_outlined;
+      case 'health':
+        return Icons.medical_services_outlined;
+      case 'entertainment':
+        return Icons.theater_comedy_outlined;
+      case 'others':
+        return Icons.grid_view_outlined;
       default:
         return Icons.receipt_long_outlined;
     }
+  }
+
+  String _formatDate(String dateText) {
+    final date = DateTime.parse(dateText);
+
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+
+    final month = months[date.month - 1];
+    final day = date.day.toString().padLeft(2, '0');
+    final year = date.year;
+
+    return '$month $day, $year';
   }
 }
