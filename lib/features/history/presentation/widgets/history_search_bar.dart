@@ -7,11 +7,11 @@ class HistorySearchBar extends StatelessWidget {
   const HistorySearchBar({
     super.key,
     required this.controller,
-    required this.onFilterTap,
+    required this.onChanged,
   });
 
   final TextEditingController controller;
-  final VoidCallback onFilterTap;
+  final ValueChanged<String> onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +20,7 @@ class HistorySearchBar extends StatelessWidget {
         Expanded(
           child: TextFormField(
             controller: controller,
+            onChanged: onChanged,
             cursorColor: AppColors.primary,
             style: AppTypography.textTheme.bodyMedium!.copyWith(
               color: AppColors.onPrimaryBlack,
@@ -61,23 +62,6 @@ class HistorySearchBar extends StatelessWidget {
 
         const SizedBox(width: 12),
 
-        GestureDetector(
-          onTap: onFilterTap,
-          behavior: HitTestBehavior.opaque,
-          child: Container(
-            width: 52,
-            height: 52,
-            decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.08),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Icon(
-              Icons.tune,
-              color: AppColors.primary,
-              size: 24,
-            ),
-          ),
-        ),
       ],
     );
   }

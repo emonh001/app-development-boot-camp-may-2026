@@ -2,12 +2,18 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../controllers/history_controller.dart';
+import '../widgets/empty_history_transactions.dart';
 import '../widgets/history_app_bar.dart';
 import '../widgets/history_search_bar.dart';
 import '../widgets/history_section.dart';
 
 class HistoryScreen extends StatefulWidget {
-  const HistoryScreen({super.key});
+  const HistoryScreen({
+    super.key,
+    required this.refreshKey,
+  });
+
+  final int refreshKey;
 
   @override
   State<HistoryScreen> createState() => _HistoryScreenState();
@@ -20,6 +26,18 @@ class _HistoryScreenState extends State<HistoryScreen> {
   void initState() {
     super.initState();
     controller = HistoryController();
+    controller.loadHistoryData();
+  }
+
+  @override
+  void didUpdateWidget(covariant HistoryScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.refreshKey != widget.refreshKey) {
+      controller.loadHistoryData(
+        searchText: controller.searchController.text,
+      );
+    }
   }
 
   @override
@@ -28,11 +46,6 @@ class _HistoryScreenState extends State<HistoryScreen> {
     super.dispose();
   }
 
-  void _openFilter() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Filter clicked')),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,40 +57,61 @@ class _HistoryScreenState extends State<HistoryScreen> {
             const HistoryAppBar(),
 
             Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(20, 18, 20, 110),
-                child: Column(
-                  children: [
-                    HistorySearchBar(
-                      controller: controller.searchController,
-                      onFilterTap: _openFilter,
+              child: AnimatedBuilder(
+                animation: controller,
+                builder: (context, _) {
+                  if (controller.isLoading &&
+                      controller.historyGroups.isEmpty) {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        color: AppColors.primary,
+                      ),
+                    );
+                  }
+
+                  return RefreshIndicator(
+                    color: AppColors.primary,
+                    onRefresh: controller.refreshHistoryData,
+                    child: SingleChildScrollView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: const EdgeInsets.fromLTRB(20, 18, 20, 110),
+                      child: Column(
+                        children: [
+                          HistorySearchBar(
+                            controller: controller.searchController,
+                            onChanged: controller.searchHistory,
+                          ),
+
+                          const SizedBox(height: 28),
+
+                          if (controller.errorMessage != null)
+                            Text(
+                              controller.errorMessage!,
+                              style: const TextStyle(
+                                color: Colors.red,
+                              ),
+                            )
+                          else if (controller.historyGroups.isEmpty)
+                            const EmptyHistoryTransactions()
+                          else
+                            ListView.separated(
+                              itemCount: controller.historyGroups.length,
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              separatorBuilder: (_, __) {
+                                return const SizedBox(height: 28);
+                              },
+                              itemBuilder: (context, index) {
+                                return HistorySection(
+                                  group: controller.historyGroups[index],
+                                );
+                              },
+                            ),
+                        ],
+                      ),
                     ),
-
-                    const SizedBox(height: 28),
-
-                    HistorySection(
-                      title: 'Today',
-                      totalAmount: '-\$142.50',
-                      transactions: controller.todayTransactions,
-                    ),
-
-                    const SizedBox(height: 28),
-
-                    HistorySection(
-                      title: 'Yesterday',
-                      totalAmount: '+\$1,250.00',
-                      transactions: controller.yesterdayTransactions,
-                    ),
-
-                    const SizedBox(height: 28),
-
-                    HistorySection(
-                      title: 'October 24',
-                      totalAmount: '-\$12.99',
-                      transactions: controller.octoberTransactions,
-                    ),
-                  ],
-                ),
+                  );
+                },
               ),
             ),
           ],

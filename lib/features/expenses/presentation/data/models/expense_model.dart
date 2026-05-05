@@ -29,7 +29,7 @@ class ExpenseModel {
   factory ExpenseModel.fromMap(Map<String, dynamic> map) {
     return ExpenseModel(
       id: map['id'] as int?,
-      amount: map['amount'] as double,
+      amount: (map['amount'] as num).toDouble(),
       category: map['category'] as String,
       note: map['note'] as String,
       date: map['date'] as String,

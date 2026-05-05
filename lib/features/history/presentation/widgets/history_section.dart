@@ -2,20 +2,16 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_typography.dart';
-import '../models/history_transaction_model.dart';
+import '../../../expenses/presentation/data/repositories/history_group_model.dart';
 import 'history_transaction_tile.dart';
 
 class HistorySection extends StatelessWidget {
   const HistorySection({
     super.key,
-    required this.title,
-    required this.totalAmount,
-    required this.transactions,
+    required this.group,
   });
 
-  final String title;
-  final String totalAmount;
-  final List<HistoryTransactionModel> transactions;
+  final HistoryGroupModel group;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +20,7 @@ class HistorySection extends StatelessWidget {
         Row(
           children: [
             Text(
-              title,
+              group.title,
               style: AppTypography.textTheme.titleMedium!.copyWith(
                 color: AppColors.onPrimaryBlack,
                 fontWeight: FontWeight.bold,
@@ -34,7 +30,7 @@ class HistorySection extends StatelessWidget {
             const Spacer(),
 
             Text(
-              totalAmount,
+              group.totalAmount,
               style: AppTypography.textTheme.titleSmall!.copyWith(
                 color: AppColors.textGrey,
                 fontWeight: FontWeight.bold,
@@ -46,13 +42,15 @@ class HistorySection extends StatelessWidget {
         const SizedBox(height: 14),
 
         ListView.separated(
-          itemCount: transactions.length,
+          itemCount: group.expenses.length,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          separatorBuilder: (_, __) => const SizedBox(height: 12),
+          separatorBuilder: (_, __) {
+            return const SizedBox(height: 12);
+          },
           itemBuilder: (context, index) {
             return HistoryTransactionTile(
-              transaction: transactions[index],
+              expense: group.expenses[index],
             );
           },
         ),

@@ -2,26 +2,18 @@ import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../../../../app/theme/app_typography.dart';
-import '../models/history_transaction_model.dart';
+import '../../../expenses/presentation/data/models/expense_model.dart';
 
 class HistoryTransactionTile extends StatelessWidget {
   const HistoryTransactionTile({
     super.key,
-    required this.transaction,
+    required this.expense,
   });
 
-  final HistoryTransactionModel transaction;
-
-  bool get isIncome => transaction.type == HistoryTransactionType.income;
+  final ExpenseModel expense;
 
   @override
   Widget build(BuildContext context) {
-    final amountColor = isIncome ? const Color(0xFF00B87C) : Colors.red;
-
-    final iconBackgroundColor = isIncome
-        ? AppColors.primary.withValues(alpha: 0.10)
-        : AppColors.primary.withValues(alpha: 0.10);
-
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(
@@ -45,11 +37,11 @@ class HistoryTransactionTile extends StatelessWidget {
             width: 46,
             height: 46,
             decoration: BoxDecoration(
-              color: iconBackgroundColor,
+              color: AppColors.primary.withValues(alpha: 0.10),
               shape: BoxShape.circle,
             ),
             child: Icon(
-              transaction.icon,
+              _getCategoryIcon(expense.category),
               color: AppColors.primary,
               size: 22,
             ),
@@ -62,7 +54,7 @@ class HistoryTransactionTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  transaction.title,
+                  _getTitle(),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTypography.textTheme.titleSmall!.copyWith(
@@ -74,7 +66,7 @@ class HistoryTransactionTile extends StatelessWidget {
                 const SizedBox(height: 5),
 
                 Text(
-                  transaction.subtitle,
+                  '${_formatCategoryName(expense.category)} • ${_formatTime(expense.createdAt)}',
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: AppTypography.textTheme.bodySmall!.copyWith(
@@ -89,14 +81,72 @@ class HistoryTransactionTile extends StatelessWidget {
           const SizedBox(width: 12),
 
           Text(
-            transaction.amount,
+            '-\$${expense.amount.toStringAsFixed(2)}',
             style: AppTypography.textTheme.titleMedium!.copyWith(
-              color: amountColor,
+              color: Colors.red,
               fontWeight: FontWeight.bold,
             ),
           ),
         ],
       ),
     );
+  }
+
+  String _getTitle() {
+    if (expense.note.trim().isNotEmpty) {
+      return expense.note;
+    }
+
+    return _formatCategoryName(expense.category);
+  }
+
+  String _formatCategoryName(String category) {
+    switch (category) {
+      case 'food':
+        return 'Food & Dining';
+      case 'transport':
+        return 'Transport';
+      case 'shopping':
+        return 'Shopping';
+      case 'health':
+        return 'Health';
+      case 'entertainment':
+        return 'Entertainment';
+      case 'others':
+        return 'Others';
+      default:
+        return category;
+    }
+  }
+
+  IconData _getCategoryIcon(String category) {
+    switch (category) {
+      case 'food':
+        return Icons.restaurant_outlined;
+      case 'transport':
+        return Icons.directions_car_outlined;
+      case 'shopping':
+        return Icons.shopping_bag_outlined;
+      case 'health':
+        return Icons.medical_services_outlined;
+      case 'entertainment':
+        return Icons.theater_comedy_outlined;
+      case 'others':
+        return Icons.grid_view_outlined;
+      default:
+        return Icons.receipt_long_outlined;
+    }
+  }
+
+  String _formatTime(String dateText) {
+    final date = DateTime.parse(dateText);
+
+    final hour = date.hour;
+    final minute = date.minute.toString().padLeft(2, '0');
+
+    final period = hour >= 12 ? 'PM' : 'AM';
+    final displayHour = hour % 12 == 0 ? 12 : hour % 12;
+
+    return '$displayHour:$minute $period';
   }
 }

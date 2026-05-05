@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:m_expense/features/history/presentation/screens/history_screen.dart';
-import 'package:m_expense/features/home/presentation/screens/home_screen.dart';
 
 import '../../../expenses/presentation/screens/add_expense_screen.dart';
+import '../../../history/presentation/screens/history_screen.dart';
+import '../../../home/presentation/screens/home_screen.dart';
 import '../../../profile/presentation/screens/profile_screen.dart';
 import '../controllers/bottom_nav_bar_controller.dart';
 import '../widgets/app_bottom_nav_bar.dart';
@@ -34,12 +34,16 @@ class _BottomNavBarHolderScreenState extends State<BottomNavBarHolderScreen> {
     controller.changeSelectedIndex(index);
   }
 
+  void _goToHomeScreen() {
+    controller.goToHome(refreshHome: true);
+  }
+
   void _goToAddScreen() {
     controller.changeSelectedIndex(1);
   }
 
-  void _goToHomeScreen() {
-    controller.changeSelectedIndex(0);
+  void _goToHistoryScreen() {
+    controller.changeSelectedIndex(2);
   }
 
   @override
@@ -52,13 +56,16 @@ class _BottomNavBarHolderScreenState extends State<BottomNavBarHolderScreen> {
             index: controller.selectedIndex,
             children: [
               HomeScreen(
+                onViewAllTap: _goToHistoryScreen,
                 onAddTap: _goToAddScreen,
                 refreshKey: controller.homeRefreshKey,
               ),
               AddExpenseScreen(
                 onBackTap: _goToHomeScreen,
               ),
-              const HistoryScreen(),
+              HistoryScreen(
+                refreshKey: controller.historyRefreshKey,
+              ),
               const ProfileScreen(),
             ],
           ),
@@ -71,6 +78,3 @@ class _BottomNavBarHolderScreenState extends State<BottomNavBarHolderScreen> {
     );
   }
 }
-
-
-

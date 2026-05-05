@@ -2,23 +2,19 @@ import 'package:flutter/material.dart';
 
 class BottomNavBarController extends ChangeNotifier {
   int selectedIndex = 0;
+
   int homeRefreshKey = 0;
+  int historyRefreshKey = 0;
 
   void changeSelectedIndex(int index) {
     if (selectedIndex == index) {
-      if (index == 0) {
-        homeRefreshKey++;
-        notifyListeners();
-      }
-
+      _refreshCurrentTab(index);
+      notifyListeners();
       return;
     }
 
     selectedIndex = index;
-
-    if (index == 0) {
-      homeRefreshKey++;
-    }
+    _refreshCurrentTab(index);
 
     notifyListeners();
   }
@@ -31,5 +27,15 @@ class BottomNavBarController extends ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  void _refreshCurrentTab(int index) {
+    if (index == 0) {
+      homeRefreshKey++;
+    }
+
+    if (index == 2) {
+      historyRefreshKey++;
+    }
   }
 }

@@ -31,6 +31,38 @@ class ExpenseRepository {
     }).toList();
   }
 
+  Future<List<ExpenseModel>> getExpensesForHistory({
+    String searchText = '',
+  }) async {
+    final db = await _databaseService.database;
+
+    final cleanedSearchText = searchText.trim();
+
+    if (cleanedSearchText.isEmpty) {
+      final result = await db.query(
+        'expenses',
+        orderBy: 'date DESC, createdAt DESC',
+      );
+
+      return result.map((map) {
+        return ExpenseModel.fromMap(map);
+      }).toList();
+    }
+
+    final searchValue = '%$cleanedSearchText%';
+
+    final result = await db.query(
+      'expenses',
+      where: 'note LIKE ? OR category LIKE ?',
+      whereArgs: [searchValue, searchValue],
+      orderBy: 'date DESC, createdAt DESC',
+    );
+
+    return result.map((map) {
+      return ExpenseModel.fromMap(map);
+    }).toList();
+  }
+
   Future<double> getTotalExpenseForMonth(DateTime month) async {
     final db = await _databaseService.database;
 

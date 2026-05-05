@@ -14,9 +14,11 @@ class HomeScreen extends StatefulWidget {
     super.key,
     required this.onAddTap,
     required this.refreshKey,
+    required this.onViewAllTap
   });
 
   final VoidCallback onAddTap;
+  final VoidCallback onViewAllTap;
   final int refreshKey;
 
   @override
@@ -48,11 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.dispose();
   }
 
-  void _viewAllTransactions() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Go to History tab')),
-    );
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +95,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               const SizedBox(height: 26),
 
                               RecentTransactionsHeader(
-                                onViewAllTap: _viewAllTransactions,
+                                onViewAllTap: widget.onViewAllTap,
                               ),
 
                               const SizedBox(height: 14),
