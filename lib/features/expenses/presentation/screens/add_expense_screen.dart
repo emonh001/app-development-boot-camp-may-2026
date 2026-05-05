@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:m_expense/features/common/presentation/widgets/show_snackbar.dart';
 
 import '../../../../app/theme/app_colors.dart';
 import '../controllers/add_expense_controller.dart';
@@ -47,12 +48,15 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
     controller.changeDate(pickedDate);
   }
 
-  void _saveExpense() {
-    final message = controller.saveExpense();
+  Future<void> _saveExpense() async {
+    final message = await controller.saveExpense();
+    if (!mounted) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ShowSnackbar.showMessage(context, message);
+
+    if (message == 'Expense saved successfully') {
+      widget.onBackTap();
+    }
   }
 
   @override
@@ -106,7 +110,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                           const SizedBox(height: 36),
 
                           SaveExpenseButton(
-                            onTap: _saveExpense,
+                            onTap: _saveExpense, isLoading: controller.isSaving,
                           ),
                         ],
                       ),

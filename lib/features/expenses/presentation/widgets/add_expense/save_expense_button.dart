@@ -7,9 +7,11 @@ class SaveExpenseButton extends StatelessWidget {
   const SaveExpenseButton({
     super.key,
     required this.onTap,
+    required this.isLoading,
   });
 
   final VoidCallback onTap;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -27,13 +29,22 @@ class SaveExpenseButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(28),
           ),
         ),
-        child: Text(
-          'Save Expense',
-          style: AppTypography.textTheme.titleMedium!.copyWith(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        child: isLoading
+            ? SizedBox(
+                width: 22,
+                height: 22,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2.4,
+                  color: Colors.white,
+                ),
+              )
+            : Text(
+                'Save Expense',
+                style: AppTypography.textTheme.titleMedium!.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
       ),
     );
   }

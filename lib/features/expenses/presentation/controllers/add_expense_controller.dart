@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:m_expense/features/expenses/presentation/data/models/expense_model.dart';
 
+import '../data/repositories/expense_repository.dart';
 import '../models/expense_category_model.dart';
 
 class AddExpenseController extends ChangeNotifier {
+  AddExpenseController({ExpenseRepository? expenseRepository})
+    : _expenseRepository = expenseRepository ?? ExpenseRepository();
+  final ExpenseRepository _expenseRepository;
+
   final formKey = GlobalKey<FormState>();
 
   final amountController = TextEditingController(text: '0.00');
   final noteController = TextEditingController();
+  bool isSaving = false;
 
   DateTime selectedDate = DateTime(2023, 11, 20);
-
   final List<ExpenseCategoryModel> categories = const [
     ExpenseCategoryModel(
       id: 'food',
@@ -79,15 +85,43 @@ class AddExpenseController extends ChangeNotifier {
     return null;
   }
 
-  String saveExpense() {
+  Future<String> saveExpense() async {
     final isValid = formKey.currentState?.validate() ?? false;
 
     if (!isValid) {
       return 'Please enter a valid amount';
     }
 
-    return 'Expense saved successfully';
+    try {
+      isSaving = true;
+      notifyListeners();
+
+      final expense = ExpenseModel(
+        amount: double.parse(amountController.text.trim()),
+        category: selectedCategoryId,
+        note: noteController.text.trim(),
+        date: DateTime.now().toIso8601String(),
+        createdAt: DateTime.now().toIso8601String(),
+      );
+      await _expenseRepository.insertExpense(expense);
+      _clearForm();
+
+      return 'Expense saved successfully';
+    } catch (error) {
+      return 'Failed to save expense';
+    } finally {
+      isSaving = false;
+      notifyListeners();
+    }
+
   }
+  void _clearForm() {
+    amountController.clear();
+    noteController.clear();
+    selectedCategoryId = 'food';
+    selectedDate = DateTime.now();
+  }
+
 
   void disposeController() {
     amountController.dispose();
