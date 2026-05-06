@@ -1,5 +1,7 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
+
 import '../../../expenses/presentation/data/repositories/expense_repository.dart';
 import '../data/models/currency_option_model.dart';
 import '../data/repositories/profile_repository.dart';
@@ -14,13 +16,19 @@ class ProfileController extends ChangeNotifier {
   final ProfileRepository _profileRepository;
   final ExpenseRepository _expenseRepository;
 
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
   final monthlyBudgetController = TextEditingController();
 
   Timer? _budgetSaveTimer;
 
   bool isLoading = false;
   bool isClearingData = false;
+  bool isSavingProfileData = false;
+  bool isEditingProfile = false;
 
+  String? nameErrorText;
+  String? emailErrorText;
   String? budgetErrorText;
 
   final List<CurrencyOptionModel> currencies = const [
@@ -62,12 +70,19 @@ class ProfileController extends ChangeNotifier {
 
       final profile = await _profileRepository.getProfile();
 
+      nameController.text = profile.name;
+      emailController.text = profile.email;
       monthlyBudgetController.text = _formatBudget(profile.monthlyBudget);
       selectedCurrencyCode = profile.currencyCode;
     } finally {
       isLoading = false;
       notifyListeners();
     }
+  }
+
+  void toggleProfileEditing() {
+    isEditingProfile = !isEditingProfile;
+    notifyListeners();
   }
 
   void changeMonthlyBudget(String value) {
@@ -115,6 +130,64 @@ class ProfileController extends ChangeNotifier {
     return 'Currency updated';
   }
 
+  Future<String> saveProfileData() async {
+    final name = nameController.text.trim();
+    final email = emailController.text.trim();
+    final budgetText = monthlyBudgetController.text.trim();
+    final monthlyBudget = double.tryParse(budgetText);
+
+    nameErrorText = null;
+    emailErrorText = null;
+    budgetErrorText = null;
+
+    if (name.isEmpty) {
+      nameErrorText = 'Name is required';
+      notifyListeners();
+      return 'Name is required';
+    }
+
+    if (email.isEmpty) {
+      emailErrorText = 'Email is required';
+      notifyListeners();
+      return 'Email is required';
+    }
+
+    final emailRegex = RegExp(r'^[\w\.-]+@[\w\.-]+\.\w+$');
+
+    if (!emailRegex.hasMatch(email)) {
+      emailErrorText = 'Enter a valid email';
+      notifyListeners();
+      return 'Enter a valid email';
+    }
+
+    if (monthlyBudget == null || monthlyBudget <= 0) {
+      budgetErrorText = 'Enter a valid budget';
+      notifyListeners();
+      return 'Enter a valid budget';
+    }
+
+    try {
+      isSavingProfileData = true;
+      notifyListeners();
+
+      await _profileRepository.updateProfileData(
+        name: name,
+        email: email,
+        monthlyBudget: monthlyBudget,
+        currency: selectedCurrency,
+      );
+
+      isEditingProfile = false;
+
+      return 'Profile data saved';
+    } catch (error) {
+      return 'Failed to save profile data';
+    } finally {
+      isSavingProfileData = false;
+      notifyListeners();
+    }
+  }
+
   Future<String> clearAllData() async {
     try {
       isClearingData = true;
@@ -141,6 +214,8 @@ class ProfileController extends ChangeNotifier {
 
   void disposeController() {
     _budgetSaveTimer?.cancel();
+    nameController.dispose();
+    emailController.dispose();
     monthlyBudgetController.dispose();
     dispose();
   }

@@ -58,4 +58,28 @@ class ProfileRepository {
       whereArgs: [1],
     );
   }
+
+  Future<void> updateProfileData({
+    required String name,
+    required String email,
+    required double monthlyBudget,
+    required CurrencyOptionModel currency,
+  }) async {
+    final db = await _databaseService.database;
+
+    await db.update(
+      'profile',
+      {
+        'name': name,
+        'email': email,
+        'monthlyBudget': monthlyBudget,
+        'currencyCode': currency.code,
+        'currencyName': currency.name,
+        'currencySymbol': currency.symbol,
+        'updatedAt': DateTime.now().toIso8601String(),
+      },
+      where: 'id = ?',
+      whereArgs: [1],
+    );
+  }
 }

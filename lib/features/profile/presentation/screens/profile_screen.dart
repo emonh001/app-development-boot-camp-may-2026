@@ -7,6 +7,7 @@ import '../widgets/app_version_text.dart';
 import '../widgets/profile_action_tile.dart';
 import '../widgets/profile_app_bar.dart';
 import '../widgets/profile_header.dart';
+import '../widgets/profile_save_button.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key, this.onDataChanged});
@@ -33,18 +34,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.dispose();
   }
 
+  Future<void> _saveProfileData() async {
+    final message = await controller.saveProfileData();
+
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
+
+    if (message == 'Profile data saved') {
+      widget.onDataChanged?.call();
+    }
+  }
+
   Future<void> _clearAllData() async {
     final message = await controller.clearAllData();
 
     if (!mounted) return;
 
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message)),
+    );
 
     if (message == 'All expense data cleared') {
       widget.onDataChanged?.call();
     }
+  }
+
+  Future<bool> _showClearDialog(BuildContext context) async {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Clear All Data'),
+          content: const Text('Are you sure you want to clear all data?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false);
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true);
+              },
+              child: const Text('Clear'),
+            ),
+          ],
+        );
+      },
+    ).then((value) => value ?? false);
   }
 
   @override
@@ -63,13 +104,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: [
                     const SizedBox(height: 24),
 
-                    const ProfileHeader(),
+                    ProfileHeader(
+                      controller: controller,
+                    ),
 
                     const SizedBox(height: 32),
 
                     AccountSettingsSection(
                       controller: controller,
                       onProfileChanged: widget.onDataChanged,
+                    ),
+
+                    const SizedBox(height: 18),
+
+                    AnimatedBuilder(
+                      animation: controller,
+                      builder: (context, _) {
+                        return ProfileSaveButton(
+                          onTap: _saveProfileData,
+                          isLoading: controller.isSavingProfileData,
+                        );
+                      },
                     ),
 
                     const SizedBox(height: 18),
@@ -93,13 +148,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           onTap: controller.isClearingData
                               ? () {}
                               : () async {
-                                  bool shouldClear = await _showClearDialog(
-                                    context,
-                                  );
-                                  if (shouldClear) {
-                                    _clearAllData();
-                                  }
-                                },
+                            final shouldClear =
+                            await _showClearDialog(context);
+
+                            if (shouldClear) {
+                              await _clearAllData();
+                            }
+                          },
                         );
                       },
                     ),
@@ -107,6 +162,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     const SizedBox(height: 30),
 
                     const AppVersionText(),
+
+                    const SizedBox(height: 24),
                   ],
                 ),
               ),
@@ -115,31 +172,5 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
-  }
-
-  Future<bool> _showClearDialog(BuildContext context) async {
-    return showDialog<bool>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Clear All Data"),
-          content: Text("Are you sure you want to clear all data?"),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false); // Do nothing
-              },
-              child: Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(true); // Call _clearAllData
-              },
-              child: Text("Clear"),
-            ),
-          ],
-        );
-      },
-    ).then((value) => value ?? false); // Return true if "Clear" was pressed
   }
 }
