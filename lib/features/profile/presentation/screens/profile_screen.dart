@@ -9,10 +9,7 @@ import '../widgets/profile_app_bar.dart';
 import '../widgets/profile_header.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({
-    super.key,
-    this.onDataChanged,
-  });
+  const ProfileScreen({super.key, this.onDataChanged});
 
   final VoidCallback? onDataChanged;
 
@@ -41,9 +38,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     if (!mounted) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
 
     if (message == 'All expense data cleared') {
       widget.onDataChanged?.call();
@@ -85,8 +82,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           title: controller.isClearingData
                               ? 'Clearing Data...'
                               : 'Clear All Data',
-                          iconBackgroundColor:
-                          Colors.red.withValues(alpha: 0.08),
+                          iconBackgroundColor: Colors.red.withValues(
+                            alpha: 0.08,
+                          ),
                           iconColor: Colors.red,
                           titleColor: Colors.red,
                           trailingIcon: Icons.warning_amber_outlined,
@@ -94,7 +92,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           borderColor: Colors.red.withValues(alpha: 0.12),
                           onTap: controller.isClearingData
                               ? () {}
-                              : _clearAllData,
+                              : () async {
+                                  bool shouldClear = await _showClearDialog(
+                                    context,
+                                  );
+                                  if (shouldClear) {
+                                    _clearAllData();
+                                  }
+                                },
                         );
                       },
                     ),
@@ -102,7 +107,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     const SizedBox(height: 30),
 
                     const AppVersionText(),
-
                   ],
                 ),
               ),
@@ -111,5 +115,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
       ),
     );
+  }
+
+  Future<bool> _showClearDialog(BuildContext context) async {
+    return showDialog<bool>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Clear All Data"),
+          content: Text("Are you sure you want to clear all data?"),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(false); // Do nothing
+              },
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(true); // Call _clearAllData
+              },
+              child: Text("Clear"),
+            ),
+          ],
+        );
+      },
+    ).then((value) => value ?? false); // Return true if "Clear" was pressed
   }
 }
